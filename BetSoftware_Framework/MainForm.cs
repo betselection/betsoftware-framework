@@ -318,7 +318,7 @@ namespace BetSoftware_Framework
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new Size(92, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
-            /*this.exitToolStripMenuItem.Image = Image.FromStream(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("close"));*/
+            /* this.exitToolStripMenuItem.Image = Image.FromStream(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("close")); */
             this.exitToolStripMenuItem.Click += new EventHandler(this.ExitToolStripMenuItem_Click);
 
             // undoStepsToolStripMenuItem
@@ -359,7 +359,7 @@ namespace BetSoftware_Framework
             this.resetSettingsToolStripMenuItem.Name = "resetSettingsToolStripMenuItem";
             this.resetSettingsToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.resetSettingsToolStripMenuItem.Text = "Reset settings";
-            /*this.resetSettingsToolStripMenuItem.Image = Image.FromStream(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("reload"));*/
+            /* this.resetSettingsToolStripMenuItem.Image = Image.FromStream(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("reload")); */
             /* TODO this.resetSettingsToolStripMenuItem.Click += new System.EventHandler(this.ResetSettingsToolStripMenuItem_Click); */
 
             // optionsToolStripMenuItem
@@ -389,7 +389,7 @@ namespace BetSoftware_Framework
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new Size(116, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
-            /*this.aboutToolStripMenuItem.Image = Image.FromStream(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("info"));*/
+            /* this.aboutToolStripMenuItem.Image = Image.FromStream(System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("info")); */
             this.aboutToolStripMenuItem.Click += new EventHandler(this.AboutToolStripMenuItem_Click);
 
             // webLinkLabel
