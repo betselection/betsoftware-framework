@@ -128,7 +128,7 @@ namespace BetSoftware_Framework
         }
 
         /// <summary>
-        /// Gets the last value.
+        /// Gets or sets the last.
         /// </summary>
         /// <value>The last.</value>
         public string Last
@@ -136,6 +136,11 @@ namespace BetSoftware_Framework
             get
             {
                 return this.last;
+            }
+
+            set
+            {
+                this.last = value;
             }
         }
 
