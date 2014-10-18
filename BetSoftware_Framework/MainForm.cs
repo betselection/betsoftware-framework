@@ -664,6 +664,229 @@ namespace BetSoftware_Framework
         }
 
         /// <summary>
+        /// Loads the modules.
+        /// </summary>
+        public void LoadModules()
+        {
+            // Clear lbsic
+            this.lbsic.Clear();
+
+            // Clear tree nodes
+            foreach (TreeNode ptn in this.launchTreeView.Nodes)
+            {
+                // Check there's something
+                if (ptn.Nodes.Count > 0)
+                {
+                    // Clear
+                    ptn.Nodes.Clear();
+                }
+            }
+
+            // Modules dictionary
+            Dictionary<string, List<string>> modules = new Dictionary<string, List<string>>();
+
+            // Process base directories
+            foreach (string dir in this.baseDirs)
+            {
+                // Check existence
+                if (Directory.Exists(/* TODO Path.Combine */ AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + dir))
+                {
+                    // Add current directory to dictionary
+                    modules.Add(dir, new List<string>()); 
+
+                    // Set list of games
+                    List<string> games = new List<string>() { Data.Game, "Multigame" };
+
+                    // Iterate games
+                    foreach (string game in games)
+                    {
+                        // Get modules
+                        string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + dir + Path.DirectorySeparatorChar + this.UpperFirst(game), "*.dll");
+
+                        // Process game modules
+                        for (int i = 0; i < files.Length; i++)
+                        {
+                            // Check it's unique
+                            if (!modules[dir].Contains(Path.GetFileNameWithoutExtension(files[i])))
+                            {
+                                // Add current module
+                                modules[dir].Add(Path.GetFileNameWithoutExtension(files[i]));
+
+                                // Prepare dictionary
+                                if (!this.moduleDir.ContainsKey(dir))
+                                {
+                                    this.moduleDir.Add(dir, new Dictionary<string, string>());
+                                }
+
+                                // Add current module dir
+                                if (!this.moduleDir[dir].ContainsKey(this.NameSpaceToDisplayName(Path.GetFileNameWithoutExtension(files[i]))))
+                                {
+                                    // Add it
+                                    this.moduleDir[dir].Add(this.NameSpaceToDisplayName(Path.GetFileNameWithoutExtension(files[i])), game);
+                                }                                
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Create base directory
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + dir);
+
+                    // Process game subdirectories
+                    foreach (string subdir in this.gameDirs)
+                    {
+                        // Create game subdirectory
+                        Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + dir + Path.DirectorySeparatorChar + subdir);
+                    }
+                }
+            }
+
+            /* Clear Listboxes */
+
+            // Iterate main tab control
+            foreach (Control mtc in this.mainTabControl.Controls)
+            {
+                // Check if it's a TabPage
+                if (mtc is TabPage)
+                {
+                    // Iterate tab page controls
+                    foreach (Control ctrl in mtc.Controls)
+                    {
+                        // Check if it's a ListBox
+                        if (ctrl is ListBox)
+                        {
+                            // Check there's something
+                            if (((ListBox)ctrl).Items.Count > 0)
+                            {
+                                // Clear items
+                                ((ListBox)ctrl).Items.Clear();
+                            }
+                        }
+                    }
+                }
+            }
+
+            /* TODO Handle possible race condition when creating directories. Validate their full creation before proceeding. */
+
+            try
+            {
+                // Process modules dictionary
+                foreach (string dir in this.baseDirs)
+                {
+                    // Iterate main tab control
+                    foreach (Control mtc in this.mainTabControl.Controls)
+                    {
+                        // Check if it's a TabPage
+                        if (mtc is TabPage)
+                        {
+                            // Check if it's a match                    
+                            if (dir.ToLower() == mtc.Name.Substring(0, mtc.Name.Length - 7).ToLower())
+                            {
+                                // Iterate tab page controls
+                                foreach (Control ctrl in mtc.Controls)
+                                {
+                                    // Check if it's a ListBox
+                                    if (ctrl is ListBox)
+                                    {
+                                        // Check if it's a match                    
+                                        if (dir.ToLower() == ctrl.Name.Substring(0, ctrl.Name.Length - 7).ToLower())
+                                        {
+                                            // Iterate modules
+                                            foreach (string module in modules[dir])
+                                            {
+                                                // Add current one
+                                                ((ListBox)ctrl).Items.Add(this.NameSpaceToDisplayName(module));
+                                            }
+
+                                            // Prepare dictionary for SelectedIndexChanged calls
+                                            if (!this.lbsic.ContainsKey(ctrl.Name))
+                                            {
+                                                // Add to dictionary
+                                                this.lbsic.Add(ctrl.Name, new List<string>());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // TODO Improve generic error message 
+                MessageBox.Show(ex.Message);
+            }
+
+            /* Update counters */
+
+            // Utilities counter
+            if (this.utilitiesListBox.Items.Count > 0)
+            {
+                // Utilities count
+                this.utilitiesTabPage.Text = "Util. (" + this.utilitiesListBox.Items.Count + ")";
+            }
+
+            // Input counter
+            if (this.inputListBox.Items.Count > 0)
+            {
+                // Input count
+                this.inputTabPage.Text = "In (" + this.inputListBox.Items.Count + ")";
+            }
+
+            // Bet Selection counter
+            if (this.betSelectionListBox.Items.Count > 0)
+            {
+                // Bet Selection count
+                this.betSelectionTabPage.Text = "Bet S (" + this.betSelectionListBox.Items.Count + ")";
+            }
+
+            // Money Management counter
+            if (this.moneyManagementListBox.Items.Count > 0)
+            {
+                // Money Management count
+                this.moneyManagementTabPage.Text = "MM (" + this.moneyManagementListBox.Items.Count + ")";
+            }
+
+            // Display counter
+            if (this.displayListBox.Items.Count > 0)
+            {
+                // Display count
+                this.displayTabPage.Text = "Disp. (" + this.displayListBox.Items.Count + ")";
+            }
+
+            // Output counter
+            if (this.outputListBox.Items.Count > 0)
+            {
+                // Set count
+                this.outputTabPage.Text = "Out (" + this.outputListBox.Items.Count + ")";
+            }
+        }
+
+        /// <summary>
+        /// Selects the tab.
+        /// </summary>
+        /// <param name="tab">Tab string.</param>
+        public void SelectTab(string tab)
+        {
+            // Iterate main tab control
+            foreach (Control mtc in this.mainTabControl.Controls)
+            {
+                // Check if it's a TabPage
+                if (mtc is TabPage)
+                {
+                    // Check if it's a match                    
+                    if (tab.ToLower() == mtc.Name.Substring(0, mtc.Name.Length - 7).ToLower())
+                    {
+                        // Select it
+                        this.mainTabControl.SelectedTab = (TabPage)mtc;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// The entry point of the program, where the program control starts and ends.
         /// </summary>
         /// <param name="args">The command-line arguments.</param>
@@ -1146,7 +1369,7 @@ namespace BetSoftware_Framework
         private void MainForm_Load(object sender, EventArgs e)
         {
             // Load modules
-            LoadModules();
+            this.LoadModules();
 
             // Select input tab page 
             this.mainTabControl.SelectedTab = this.inputTabPage; /* TODO Remember last tab */
@@ -1173,215 +1396,6 @@ namespace BetSoftware_Framework
             {
                 // Center screen
                 this.StartPosition = FormStartPosition.CenterScreen;
-            }
-        }
-
-        /// <summary>
-        /// Loads the modules.
-        /// </summary>
-        public void LoadModules()
-        {
-            // Modules dictionary
-            Dictionary<string, List<string>> modules = new Dictionary<string, List<string>>();
-
-            // Process base directories
-            foreach (string dir in this.baseDirs)
-            {
-                // Check existence
-                if (Directory.Exists(/* TODO Path.Combine */ AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + dir))
-                {
-                    // Add current directory to dictionary
-                    modules.Add(dir, new List<string>()); 
-
-                    // Set list of games
-                    List<string> games = new List<string>() { Data.Game, "Multigame" };
-
-                    // Iterate games
-                    foreach (string game in games)
-                    {
-                        // Get modules
-                        string[] files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + dir + Path.DirectorySeparatorChar + this.UpperFirst(game), "*.dll");
-
-                        // Process game modules
-                        for (int i = 0; i < files.Length; i++)
-                        {
-                            // Check it's unique
-                            if (!modules[dir].Contains(Path.GetFileNameWithoutExtension(files[i])))
-                            {
-                                // Add current module
-                                modules[dir].Add(Path.GetFileNameWithoutExtension(files[i]));
-
-                                // Prepare dictionary
-                                if (!this.moduleDir.ContainsKey(dir))
-                                {
-                                    this.moduleDir.Add(dir, new Dictionary<string, string>());
-                                }
-
-                                // Add current module dir
-                                if (!this.moduleDir[dir].ContainsKey(this.NameSpaceToDisplayName(Path.GetFileNameWithoutExtension(files[i]))))
-                                {
-                                    // Add it
-                                    this.moduleDir[dir].Add(this.NameSpaceToDisplayName(Path.GetFileNameWithoutExtension(files[i])), game);
-                                }                                
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    // Create base directory
-                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + dir);
-
-                    // Process game subdirectories
-                    foreach (string subdir in this.gameDirs)
-                    {
-                        // Create game subdirectory
-                        Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + dir + Path.DirectorySeparatorChar + subdir);
-                    }
-                }
-            }
-
-            /* Clear Listboxes */
-
-            // Iterate main tab control
-            foreach (Control mtc in this.mainTabControl.Controls)
-            {
-                // Check if it's a TabPage
-                if (mtc is TabPage)
-                {
-                    // Iterate tab page controls
-                    foreach (Control ctrl in mtc.Controls)
-                    {
-                        // Check if it's a ListBox
-                        if (ctrl is ListBox)
-                        {
-                            // Check there's something
-                            if (((ListBox)ctrl).Items.Count > 0)
-                            {
-                                // Clear items
-                                ((ListBox)ctrl).Items.Clear();
-                            }
-                        }
-                    }
-                }
-            }
-
-            /* TODO Handle possible race condition when creating directories. Validate their full creation before proceeding. */
-
-            try
-            {
-                // Process modules dictionary
-                foreach (string dir in this.baseDirs)
-                {
-                    // Iterate main tab control
-                    foreach (Control mtc in this.mainTabControl.Controls)
-                    {
-                        // Check if it's a TabPage
-                        if (mtc is TabPage)
-                        {
-                            // Check if it's a match                    
-                            if (dir.ToLower() == mtc.Name.Substring(0, mtc.Name.Length - 7).ToLower())
-                            {
-                                // Iterate tab page controls
-                                foreach (Control ctrl in mtc.Controls)
-                                {
-                                    // Check if it's a ListBox
-                                    if (ctrl is ListBox)
-                                    {
-                                        // Check if it's a match                    
-                                        if (dir.ToLower() == ctrl.Name.Substring(0, ctrl.Name.Length - 7).ToLower())
-                                        {
-                                            // Iterate modules
-                                            foreach (string module in modules[dir])
-                                            {
-                                                // Add current one
-                                                ((ListBox)ctrl).Items.Add(this.NameSpaceToDisplayName(module));
-                                            }
-
-                                            // Prepare dictionary for SelectedIndexChanged calls
-                                            if (!this.lbsic.ContainsKey(ctrl.Name))
-                                            {
-                                                // Add to dictionary
-                                                this.lbsic.Add(ctrl.Name, new List<string>());
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // TODO Improve generic error message 
-                MessageBox.Show(ex.Message);
-            }
-
-            /* Update counters */
-
-            // Utilities counter
-            if (this.utilitiesListBox.Items.Count > 0)
-            {
-                // Utilities count
-                this.utilitiesTabPage.Text = "Util. (" + this.utilitiesListBox.Items.Count + ")";
-            }
-
-            // Input counter
-            if (this.inputListBox.Items.Count > 0)
-            {
-                // Input count
-                this.inputTabPage.Text = "In (" + this.inputListBox.Items.Count + ")";
-            }
-
-            // Bet Selection counter
-            if (this.betSelectionListBox.Items.Count > 0)
-            {
-                // Bet Selection count
-                this.betSelectionTabPage.Text = "Bet S (" + this.betSelectionListBox.Items.Count + ")";
-            }
-
-            // Money Management counter
-            if (this.moneyManagementListBox.Items.Count > 0)
-            {
-                // Money Management count
-                this.moneyManagementTabPage.Text = "MM (" + this.moneyManagementListBox.Items.Count + ")";
-            }
-
-            // Display counter
-            if (this.displayListBox.Items.Count > 0)
-            {
-                // Display count
-                this.displayTabPage.Text = "Disp. (" + this.displayListBox.Items.Count + ")";
-            }
-
-            // Output counter
-            if (this.outputListBox.Items.Count > 0)
-            {
-                // Set count
-                this.outputTabPage.Text = "Out (" + this.outputListBox.Items.Count + ")";
-            }
-        }
-
-        /// <summary>
-        /// Selects the tab.
-        /// </summary>
-        /// <param name="tab">Tab.</param>
-        public void SelectTab(string tab)
-        {
-            // Iterate main tab control
-            foreach (Control mtc in this.mainTabControl.Controls)
-            {
-                // Check if it's a TabPage
-                if (mtc is TabPage)
-                {
-                    // Check if it's a match                    
-                    if (tab.ToLower() == mtc.Name.Substring(0, mtc.Name.Length - 7).ToLower())
-                    {
-                        // Select it
-                        this.mainTabControl.SelectedTab = (TabPage)mtc;
-                    }
-                }
             }
         }
 
