@@ -832,7 +832,7 @@ namespace BetSoftware_Framework
         private void LaunchButton_Click(object sender, EventArgs e)
         {
             // Add new BetMarshal to list
-            this.marshals.Add(new BetMarshal());
+            this.marshals.Add(new BetMarshal(this));
 
             // Iterate parent nodes
             foreach (TreeNode ptn in this.launchTreeView.Nodes)
@@ -1145,6 +1145,42 @@ namespace BetSoftware_Framework
         /// <param name="e">Event arguments.</param>
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // Load modules
+            LoadModules();
+
+            // Select input tab page 
+            this.mainTabControl.SelectedTab = this.inputTabPage; /* TODO Remember last tab */
+
+            /* Load options */
+
+            // File Size
+            FileInfo xmlInfo = new FileInfo(Data.XmlFile);
+
+            // Check for XML file's existence and length
+            if (File.Exists(Data.XmlFile) && xmlInfo.Length > 0)
+            {
+                // Set options
+                this.SetOptions();
+
+                // Should set previous position?
+                if (this.savePositionToolStripMenuItem.Checked)
+                {
+                    // Set Modules Position
+                    this.SetModulesPosition();
+                }
+            }
+            else
+            {
+                // Center screen
+                this.StartPosition = FormStartPosition.CenterScreen;
+            }
+        }
+
+        /// <summary>
+        /// Loads the modules.
+        /// </summary>
+        public void LoadModules()
+        {
             // Modules dictionary
             Dictionary<string, List<string>> modules = new Dictionary<string, List<string>>();
 
@@ -1182,7 +1218,11 @@ namespace BetSoftware_Framework
                                 }
 
                                 // Add current module dir
-                                this.moduleDir[dir].Add(this.NameSpaceToDisplayName(Path.GetFileNameWithoutExtension(files[i])), game);
+                                if (!this.moduleDir[dir].ContainsKey(this.NameSpaceToDisplayName(Path.GetFileNameWithoutExtension(files[i]))))
+                                {
+                                    // Add it
+                                    this.moduleDir[dir].Add(this.NameSpaceToDisplayName(Path.GetFileNameWithoutExtension(files[i])), game);
+                                }                                
                             }
                         }
                     }
@@ -1201,6 +1241,31 @@ namespace BetSoftware_Framework
                 }
             }
 
+            /* Clear Listboxes */
+
+            // Iterate main tab control
+            foreach (Control mtc in this.mainTabControl.Controls)
+            {
+                // Check if it's a TabPage
+                if (mtc is TabPage)
+                {
+                    // Iterate tab page controls
+                    foreach (Control ctrl in mtc.Controls)
+                    {
+                        // Check if it's a ListBox
+                        if (ctrl is ListBox)
+                        {
+                            // Check there's something
+                            if (((ListBox)ctrl).Items.Count > 0)
+                            {
+                                // Clear items
+                                ((ListBox)ctrl).Items.Clear();
+                            }
+                        }
+                    }
+                }
+            }
+
             /* TODO Handle possible race condition when creating directories. Validate their full creation before proceeding. */
 
             try
@@ -1208,7 +1273,7 @@ namespace BetSoftware_Framework
                 // Process modules dictionary
                 foreach (string dir in this.baseDirs)
                 {
-                    // Interate main tab control
+                    // Iterate main tab control
                     foreach (Control mtc in this.mainTabControl.Controls)
                     {
                         // Check if it's a TabPage
@@ -1234,7 +1299,11 @@ namespace BetSoftware_Framework
                                             }
 
                                             // Prepare dictionary for SelectedIndexChanged calls
-                                            this.lbsic.Add(ctrl.Name, new List<string>());
+                                            if (!this.lbsic.ContainsKey(ctrl.Name))
+                                            {
+                                                // Add to dictionary
+                                                this.lbsic.Add(ctrl.Name, new List<string>());
+                                            }
                                         }
                                     }
                                 }
@@ -1248,9 +1317,6 @@ namespace BetSoftware_Framework
                 // TODO Improve generic error message 
                 MessageBox.Show(ex.Message);
             }
-
-            // Select input tab page 
-            this.mainTabControl.SelectedTab = this.inputTabPage; /* TODO Remember last tab */
 
             /* Update counters */
 
@@ -1295,29 +1361,27 @@ namespace BetSoftware_Framework
                 // Set count
                 this.outputTabPage.Text = "Out (" + this.outputListBox.Items.Count + ")";
             }
+        }
 
-            /* Load options */
-
-            // File Size
-            FileInfo xmlInfo = new FileInfo(Data.XmlFile);
-
-            // Check for XML file's existence and length
-            if (File.Exists(Data.XmlFile) && xmlInfo.Length > 0)
+        /// <summary>
+        /// Selects the tab.
+        /// </summary>
+        /// <param name="tab">Tab.</param>
+        public void SelectTab(string tab)
+        {
+            // Iterate main tab control
+            foreach (Control mtc in this.mainTabControl.Controls)
             {
-                // Set options
-                this.SetOptions();
-
-                // Should set previous position?
-                if (this.savePositionToolStripMenuItem.Checked)
+                // Check if it's a TabPage
+                if (mtc is TabPage)
                 {
-                    // Set Modules Position
-                    this.SetModulesPosition();
+                    // Check if it's a match                    
+                    if (tab.ToLower() == mtc.Name.Substring(0, mtc.Name.Length - 7).ToLower())
+                    {
+                        // Select it
+                        this.mainTabControl.SelectedTab = (TabPage)mtc;
+                    }
                 }
-            }
-            else
-            {
-                // Center screen
-                this.StartPosition = FormStartPosition.CenterScreen;
             }
         }
 

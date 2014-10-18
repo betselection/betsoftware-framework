@@ -112,10 +112,19 @@ namespace BetSoftware_Framework
         private string game = Data.Game;
 
         /// <summary>
+        /// The main form reference.
+        /// </summary>
+        private object mainFormReference = null;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BetSoftware_Framework.BetMarshal"/> class.
         /// </summary>
-        public BetMarshal()
+        /// <param name="mainFormRef">Main form reference.</param>
+        public BetMarshal(object mainFormRef)
         {
+            // Set main form reference
+            mainFormReference = mainFormRef;
+
             /* Prepare modules dictionary */
 
             // Loop notification
@@ -333,6 +342,26 @@ namespace BetSoftware_Framework
             this.bets.Clear();
 
             /* Loop (notify) */
+        }
+
+        /// <summary>
+        /// Reloads the modules.
+        /// </summary>
+        public void ReloadModules()
+        {
+            // Invoke LoadModules in main form
+            mainFormReference.GetType().GetMethod("LoadModules").Invoke(mainFormReference, null);
+        }
+
+
+        /// <summary>
+        /// Selects the tab.
+        /// </summary>
+        /// <param name="tab">Tab.</param>
+        public void SelectTab(string tab)
+        {
+            // Invoke SelectTab in main form
+            mainFormReference.GetType().GetMethod("SelectTab").Invoke(mainFormReference, new object[] { tab });
         }
     }
 }
