@@ -67,6 +67,11 @@ namespace BetSoftware_Framework
         private Dictionary<string, object> messages = new Dictionary<string, object>();
 
         /// <summary>
+        /// Default paths.
+        /// </summary>
+        private Dictionary<string, string> paths = new Dictionary<string, string>();
+
+        /// <summary>
         /// Set initial balance amount.
         /// </summary>
         private decimal balance = 0M;
@@ -102,6 +107,11 @@ namespace BetSoftware_Framework
         private Icon icon = Data.Icon;
 
         /// <summary>
+        /// The active game.
+        /// </summary>
+        private string game = Data.Game;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BetSoftware_Framework.BetMarshal"/> class.
         /// </summary>
         public BetMarshal()
@@ -110,6 +120,9 @@ namespace BetSoftware_Framework
 
             // Loop notification
             this.modules.Add("Loop", new List<object>());
+
+            // Utilities
+            this.modules.Add("Utilities", new List<object>());
 
             // Bet selection
             this.modules.Add("Input", new List<object>());
@@ -125,6 +138,11 @@ namespace BetSoftware_Framework
 
             // Output
             this.modules.Add("Output", new List<object>());
+
+            /* Prepare paths dictionary */
+
+            // Framework
+            this.paths.Add("framework", AppDomain.CurrentDomain.BaseDirectory);
         }
 
         /// <summary>
@@ -170,6 +188,30 @@ namespace BetSoftware_Framework
             set
             {
                 this.bet = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the paths.
+        /// </summary>
+        /// <value>The paths.</value>
+        public Dictionary<string, string> Paths
+        {
+            get
+            {
+                return paths;
+            }
+        }
+
+        /// <summary>
+        /// Gets the game.
+        /// </summary>
+        /// <value>The game.</value>
+        public string Game
+        {
+            get
+            {
+                return game;
             }
         }
 
