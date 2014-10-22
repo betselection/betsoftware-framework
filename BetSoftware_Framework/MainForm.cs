@@ -239,6 +239,29 @@ namespace BetSoftware_Framework
         private TreeView launchTreeView;
 
         /// <summary>
+        /// The entry point of the program, where the program control starts and ends.
+        /// </summary>
+        /// <param name="args">The command-line arguments.</param>
+        [STAThread]
+        public static void Main(string[] args)
+        {
+            // Check there are arguments
+            if (args.Length == 0)
+                {
+                    // Not present
+                    // TODO MessageBox.Show("Missing initialization arguments." + Environment.NewLine + "Please use BetSoftware_Loader.exe", "Invalid initialization", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+            // Set game
+            /* TODO Data.Game = "Roulette";*/
+
+            // Launch
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new MainForm());
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BetSoftware_Framework.MainForm"/> class.
         /// </summary>
         public MainForm()
@@ -884,29 +907,6 @@ namespace BetSoftware_Framework
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// The entry point of the program, where the program control starts and ends.
-        /// </summary>
-        /// <param name="args">The command-line arguments.</param>
-        [STAThread]
-        public static void Main(string[] args)
-        {
-            // Check there are arguments
-            if (args.Length == 0)
-            {
-                // Not present
-                // TODO MessageBox.Show("Missing initialization arguments." + Environment.NewLine + "Please use BetSoftware_Loader.exe", "Invalid initialization", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-
-            // Set game
-            /* TODO Data.Game = "Roulette";*/
-
-            // Launch
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
         }
 
         /// <summary>
