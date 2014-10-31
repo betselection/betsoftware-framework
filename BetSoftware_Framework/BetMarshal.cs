@@ -27,6 +27,9 @@
 /// <summary>
 /// Bet marshal.
 /// </summary>
+using System.IO;
+
+
 namespace BetSoftware_Framework
 {
     // Directives
@@ -133,7 +136,7 @@ namespace BetSoftware_Framework
             // Utilities
             this.modules.Add("Utilities", new List<object>());
 
-            // Bet selection
+            // Input
             this.modules.Add("Input", new List<object>());
 
             // Bet selection
@@ -151,7 +154,29 @@ namespace BetSoftware_Framework
             /* Prepare paths dictionary */
 
             // Framework
-            this.paths.Add("framework", AppDomain.CurrentDomain.BaseDirectory);
+            this.paths.Add("Framework", AppDomain.CurrentDomain.BaseDirectory);
+
+            // TODO Loader
+
+            // TODO Updater
+
+            // Utilities
+            this.paths.Add("Utilities", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Utilities"));
+
+            // Input
+            this.paths.Add("Input", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Input"));
+
+            // BetSelection
+            this.paths.Add("BetSelection", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "BetSelection"));
+
+            // Money management
+            this.paths.Add("MoneyManagement", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MoneyManagement"));
+
+            // Display
+            this.paths.Add("Display", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Display"));
+
+            // Output
+            this.paths.Add("Output", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output"));
         }
 
         /// <summary>

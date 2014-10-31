@@ -247,10 +247,10 @@ namespace BetSoftware_Framework
         {
             // Check there are arguments
             if (args.Length == 0)
-                {
-                    // Not present
-                    // TODO MessageBox.Show("Missing initialization arguments." + Environment.NewLine + "Please use BetSoftware_Loader.exe", "Invalid initialization", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+            {
+                // Not present
+                // TODO MessageBox.Show("Missing initialization arguments." + Environment.NewLine + "Please use BetSoftware_Loader.exe", "Invalid initialization", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
 
             // Set game
             /* TODO Data.Game = "Roulette";*/
@@ -850,12 +850,22 @@ namespace BetSoftware_Framework
                 // Utilities count
                 this.utilitiesTabPage.Text = "Util. (" + this.utilitiesListBox.Items.Count + ")";
             }
+            else
+            {
+                // Original
+                this.utilitiesTabPage.Text = "Utilities";
+            }
 
             // Input counter
             if (this.inputListBox.Items.Count > 0)
             {
                 // Input count
                 this.inputTabPage.Text = "In (" + this.inputListBox.Items.Count + ")";
+            }
+            else
+            {
+                // Original
+                this.inputTabPage.Text = "Input";
             }
 
             // Bet Selection counter
@@ -864,12 +874,22 @@ namespace BetSoftware_Framework
                 // Bet Selection count
                 this.betSelectionTabPage.Text = "Bet S (" + this.betSelectionListBox.Items.Count + ")";
             }
+            else
+            {
+                // Original
+                this.betSelectionTabPage.Text = "Bet S.";
+            }
 
             // Money Management counter
             if (this.moneyManagementListBox.Items.Count > 0)
             {
                 // Money Management count
                 this.moneyManagementTabPage.Text = "MM (" + this.moneyManagementListBox.Items.Count + ")";
+            }
+            else
+            {
+                // Original
+                this.moneyManagementTabPage.Text = "Mon. M.";
             }
 
             // Display counter
@@ -878,12 +898,22 @@ namespace BetSoftware_Framework
                 // Display count
                 this.displayTabPage.Text = "Disp. (" + this.displayListBox.Items.Count + ")";
             }
+            else
+            {
+                // Original
+                this.displayTabPage.Text = "Display";
+            }
 
             // Output counter
             if (this.outputListBox.Items.Count > 0)
             {
                 // Set count
                 this.outputTabPage.Text = "Out (" + this.outputListBox.Items.Count + ")";
+            }
+            else
+            {
+                // Original
+                this.outputTabPage.Text = "Output";
             }
         }
 
