@@ -1,10 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MainForm.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Data.cs">
     <Files>
-      <File FileName="MainForm.cs" Line="963" Column="9" />
-      <File FileName="BetMarshal.cs" Line="378" Column="63" />
-      <File FileName="Data.cs" Line="1" Column="1" />
+      <File FileName="MainForm.cs" Line="34" Column="19" />
+      <File FileName="BetMarshal.cs" Line="161" Column="28" />
+      <File FileName="Data.cs" Line="127" Column="14" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

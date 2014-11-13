@@ -378,7 +378,6 @@ namespace BetSoftware_Framework
             mainFormReference.GetType().GetMethod("LoadModules").Invoke(mainFormReference, null);
         }
 
-
         /// <summary>
         /// Selects the tab.
         /// </summary>
@@ -387,6 +386,28 @@ namespace BetSoftware_Framework
         {
             // Invoke SelectTab in main form
             mainFormReference.GetType().GetMethod("SelectTab").Invoke(mainFormReference, new object[] { tab });
+        }
+
+        /// <summary>
+        /// Changes passed display name to namespace.
+        /// </summary>
+        /// <returns>Resulting namespace.</returns>
+        /// <param name="displayName">Display name.</param>
+        public string DisplayNameToNamespace(string displayName)
+        {
+            // Invoke DisplayNameToNamespace in main form
+            return (string)mainFormReference.GetType().GetMethod("DisplayNameToNamespace").Invoke(mainFormReference, new object[] { displayName });
+        }
+
+        /// <summary>
+        /// Changes namespace to display name
+        /// </summary>
+        /// <param name="nameSpace">string Passed namespace</param>
+        /// <returns>String with replacements</returns>
+        public string NamespaceToDisplayName(string nameSpace)
+        {
+            // Invoke NamespaceToDisplayName in main form
+            return (string)mainFormReference.GetType().GetMethod("NamespaceToDisplayName").Invoke(mainFormReference, new object[] { nameSpace });
         }
     }
 }

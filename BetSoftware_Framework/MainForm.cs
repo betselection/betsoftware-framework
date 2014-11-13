@@ -742,10 +742,10 @@ namespace BetSoftware_Framework
                                 }
 
                                 // Add current module dir
-                                if (!this.moduleDir[dir].ContainsKey(this.NameSpaceToDisplayName(Path.GetFileNameWithoutExtension(files[i]))))
+                                if (!this.moduleDir[dir].ContainsKey(this.NamespaceToDisplayName(Path.GetFileNameWithoutExtension(files[i]))))
                                 {
                                     // Add it
-                                    this.moduleDir[dir].Add(this.NameSpaceToDisplayName(Path.GetFileNameWithoutExtension(files[i])), game);
+                                    this.moduleDir[dir].Add(this.NamespaceToDisplayName(Path.GetFileNameWithoutExtension(files[i])), game);
                                 }                                
                             }
                         }
@@ -819,7 +819,7 @@ namespace BetSoftware_Framework
                                             foreach (string module in modules[dir])
                                             {
                                                 // Add current one
-                                                ((ListBox)ctrl).Items.Add(this.NameSpaceToDisplayName(module));
+                                                ((ListBox)ctrl).Items.Add(this.NamespaceToDisplayName(module));
                                             }
 
                                             // Prepare dictionary for SelectedIndexChanged calls
@@ -958,7 +958,7 @@ namespace BetSoftware_Framework
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Display about msg 
-            MessageBox.Show("Programmed by Victor/VLS for the BetSelection.cc community." + Environment.NewLine + Environment.NewLine + "(October 2014 / Version: 0.1" /* TODO Application.ProductVersion */ + ")", "About BetSoftware Framework", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Programmed by Victor/VLS for the BetSelection.cc community." + Environment.NewLine + Environment.NewLine + "(November 2014 / Version: 0.1" /* TODO Application.ProductVersion */ + ")", "About BetSoftware Framework", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /// <summary>
@@ -1094,10 +1094,10 @@ namespace BetSoftware_Framework
                 foreach (TreeNode ctn in ptn.Nodes)
                 {
                     // Load assembly
-                    Assembly asm = Assembly.LoadFile(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + ptn.Name.Substring(2) + Path.DirectorySeparatorChar + this.moduleDir[ptn.Name.Substring(2)][ctn.Name] + Path.DirectorySeparatorChar + this.DisplayNameToNameSpace(ctn.Name) + ".dll");
+                    Assembly asm = Assembly.LoadFile(AppDomain.CurrentDomain.BaseDirectory + Path.DirectorySeparatorChar + ptn.Name.Substring(2) + Path.DirectorySeparatorChar + this.moduleDir[ptn.Name.Substring(2)][ctn.Name] + Path.DirectorySeparatorChar + this.DisplayNameToNamespace(ctn.Name) + ".dll");
 
                     // Get type
-                    Type type = asm.GetType(this.DisplayNameToNameSpace(ctn.Name) + "." + this.DisplayNameToNameSpace(ctn.Name));
+                    Type type = asm.GetType(this.DisplayNameToNamespace(ctn.Name) + "." + this.DisplayNameToNamespace(ctn.Name));
 
                     // Set module instance
                     object obj = Activator.CreateInstance(type);
@@ -1432,32 +1432,19 @@ namespace BetSoftware_Framework
         /// <summary>
         /// Changes passed display name to namespace.
         /// </summary>
-        /// <returns>Resulting name space.</returns>
+        /// <returns>Resulting namespace.</returns>
         /// <param name="displayName">Display name.</param>
-        private string DisplayNameToNameSpace(string displayName)
+        public string DisplayNameToNamespace(string displayName)
         {
-            // Check strings are there
+            // Check there's something to work with
             if (displayName.Length > 0)
             {
                 // Match with regular expression
-                MatchCollection matches = Regex.Matches(displayName, @"[^a-zA-Z0-9_]");
+                MatchCollection matches = Regex.Matches(displayName, @"[^a-zA-Z]");
 
                 // Walk reversed
                 for (int i = matches.Count - 1; i >= 0; i--)
                 {
-                    // Handle space
-                    if (matches[i].Value == " ")
-                    {
-                        // Remove original
-                        displayName = displayName.Remove(matches[i].Index, 1);
-
-                        // Insert replacement
-                        displayName = displayName.Insert(matches[i].Index, "__");
-
-                        // Next iteration
-                        continue;
-                    }
-
                     // Set encoding
                     UTF32Encoding encoding = new UTF32Encoding(); 
 
@@ -1498,11 +1485,11 @@ namespace BetSoftware_Framework
         }
 
         /// <summary>
-        /// Changes namespace to display name by naming convention
+        /// Changes namespace to display name
         /// </summary>
         /// <param name="nameSpace">string Passed namespace</param>
         /// <returns>String with replacements</returns>
-        private string NameSpaceToDisplayName(string nameSpace)
+        public string NamespaceToDisplayName(string nameSpace)
         {
             // Match with regular expression
             MatchCollection matches = Regex.Matches(nameSpace, @"_[0-9]+_");
@@ -1510,32 +1497,6 @@ namespace BetSoftware_Framework
             // Walk reversed
             for (int i = matches.Count - 1; i >= 0; i--)
             {
-                /* Validate odd underscores */
-
-                // Counter
-                int count = 0;
-
-                // Get underscores
-                for (int j = matches[i].Index; j >= 0; j--)
-                {
-                    // Check for non-underscore
-                    if (nameSpace[j].ToString() != "_")
-                    {
-                        // Halt flow
-                        break;
-                    }
-
-                    // Rise counter
-                    count++;
-                }
-
-                // Check for odd
-                if ((count % 2) == 0)
-                {
-                    // Move to next iteration
-                    continue;
-                }
-
                 // Convert
                 try
                 {
@@ -1557,9 +1518,6 @@ namespace BetSoftware_Framework
                     // Let it fall through
                 }
             }
-
-            // Replace double-space with single
-            nameSpace = nameSpace.Replace("__", " ");
 
             // Processed namespace back
             return nameSpace;

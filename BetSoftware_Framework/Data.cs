@@ -69,7 +69,7 @@ namespace BetSoftware_Framework
         /// <summary>
         /// Text for step three (subscribers).
         /// </summary>
-        private static string stepThreeSubscriber = "{1}, enjoy subscribers' auto-update!";
+        private static string stepThreeSubscriber = "{0}, enjoy subscribers' auto-update!";
 
         /// <summary>
         /// The member.
